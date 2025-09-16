@@ -211,6 +211,12 @@ export const getRecommendations = (): Book[] => {
 };
 
 
+export const getBookById = (id: string): Book | null => {
+  const book = books.find((b) => b.id === id);
+  return book ? structuredClone(book) : null;
+};
+
+
 // src/services/bookService.ts
 export const searchBooks = (
   filters: { title?: string; author?: string; genre?: string }
@@ -243,6 +249,7 @@ export const searchBooks = (
 
   return results;
 };
+
 
 
 
