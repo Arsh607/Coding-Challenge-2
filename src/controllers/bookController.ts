@@ -3,17 +3,26 @@ import { HTTP_STATUS } from "../constants/httpConstants";
 import * as bookService from "../services/bookService";
 
 export const getAllBooks = (req: Request, res: Response): void => {
-    try {
-        const books = bookService.getAllBooks();
-        res.status(HTTP_STATUS.OK).json({
-            message: "Books retrieved",
-            data: books,
-        });
-    } catch (error) {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-            message: "Error retrieving books",
-        });
-    }
+  try {
+    // Extract optional query params
+    const { title = '', author = '', genre = '' } = req.query;
+
+    // Call service with filters
+    const books = bookService.searchBooks({
+      title: String(title),
+      author: String(author),
+      genre: String(genre),
+    });
+
+    res.status(HTTP_STATUS.OK).json({
+      message: books.length ? "Books retrieved" : "No books found for criteria",
+      data: books,
+    });
+  } catch (error) {
+    res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+      message: "Error retrieving books",
+    });
+  }
 };
 
 export const addBook = (req: Request, res: Response): void => {

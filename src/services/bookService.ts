@@ -210,7 +210,46 @@ export const getRecommendations = (): Book[] => {
     return structuredClone(books.slice(0, 3));
 };
 
+
 export const getBookById = (id: string): Book | null => {
   const book = books.find((b) => b.id === id);
   return book ? structuredClone(book) : null;
 };
+
+
+// src/services/bookService.ts
+export const searchBooks = (
+  filters: { title?: string; author?: string; genre?: string }
+): Book[] => {
+  let results = structuredClone(books);
+
+  // Filter by title (partial, case-insensitive)
+  if (filters.title) {
+    const lowerTitle = filters.title.trim().toLowerCase();
+    results = results.filter((book) =>
+      book.title.toLowerCase().includes(lowerTitle)
+    );
+  }
+
+  // Filter by author (partial, case-insensitive)
+  if (filters.author) {
+    const lowerAuthor = filters.author.trim().toLowerCase();
+    results = results.filter((book) =>
+      book.author.toLowerCase().includes(lowerAuthor)
+    );
+  }
+
+  // Filter by genre (exact, case-insensitive)
+  if (filters.genre) {
+    const lowerGenre = filters.genre.trim().toLowerCase();
+    results = results.filter(
+      (book) => book.genre.toLowerCase() === lowerGenre
+    );
+  }
+
+  return results;
+};
+
+
+
+
